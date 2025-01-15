@@ -101,3 +101,6 @@ class TestParentNode(unittest.TestCase):
         self.assertEqual(
             "ParentNode(This is a tag, This is a child, {'key': 'value'})", repr(node)
         )
+
+if __name__ == "__main__":
+    unittest.main()

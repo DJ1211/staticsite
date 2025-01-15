@@ -58,3 +58,6 @@ class TestSplitDelimiter(unittest.TestCase):
             split_nodes_delimiter([text_node], "**", TextType.BOLD)
         
         self.assertEqual(str(context.exception), "Unmatched delimiter")
+
+if __name__ == "__main__":
+    unittest.main()

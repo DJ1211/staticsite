@@ -62,3 +62,6 @@ class TestLeafNode(unittest.TestCase):
         self.assertEqual(
             "LeafNode(This is a tag, This is a leaf node, {'key': 'value'})", repr(node)
         )
+
+if __name__ == "__main__":
+    unittest.main()
