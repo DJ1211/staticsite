@@ -2,7 +2,7 @@ import unittest
 
 from textnode import text_node_to_html_node, TextNode, TextType
 
-class TestTextNode(unittest.TestCase):
+class TestTextToHTML(unittest.TestCase):
     def test_text_to_html_node_normal(self):
         text_node = TextNode("Test Text", TextType.TEXT)
         html_node = text_node_to_html_node(text_node)

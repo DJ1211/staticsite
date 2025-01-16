@@ -2,7 +2,7 @@ import unittest
 
 from split_delimiter import split_nodes_link, split_nodes_image, TextNode, TextType
 
-class TestSplitDelimiter(unittest.TestCase):
+class TestSplitImageLink(unittest.TestCase):
     def test_split_image_one_image(self):
         node = TextNode(
                         "This is text with an image ![image](url)",
