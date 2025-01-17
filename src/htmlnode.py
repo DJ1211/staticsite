@@ -43,7 +43,7 @@ class ParentNode(HTMLNode):
 
         if self.children is None:
             raise ValueError("Invalid HTML: missing children")
-        
+
         children_html = ""
         for child in self.children:
             children_html += child.to_html()

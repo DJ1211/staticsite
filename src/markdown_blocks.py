@@ -1,4 +1,6 @@
-from htmlnode import HTMLNode, ParentNode, LeafNode
+from split_delimiter import text_to_textnodes
+from textnode import text_node_to_html_node
+from htmlnode import ParentNode
 
 
 block_type_paragraph = "paragraph"
@@ -75,16 +77,135 @@ def block_to_block_type(block):
         return block_type_paragraph
 
 def markdown_to_html_node(markdown):
+    final_nodes = []
     markdown_blocks = markdown_to_blocks(markdown)
     for block in markdown_blocks:
         block_type = block_to_block_type(block)
-        if block_type == "heading":
-            print(True)
-        else:
-            print(False)
+        html_node = create_html_node(block_type, block)
+        final_nodes.append(html_node)
+    full_node = ParentNode("div", final_nodes)
+    return full_node
+
+   
+def create_html_node(block_type, block):
+    if block_type == block_type_paragraph:
+        lines = block.split("\n")
+        paragraph = " ".join(lines)
+        child_node = text_to_children(paragraph)
+        node = ParentNode("p", child_node)
+        return node
+    
+    elif block_type == block_type_heading:
+        new_text, tag = format_heading(block)
+        child_node = text_to_children(new_text)
+        node = ParentNode(f"{tag}", child_node)
+        return node
+    
+    elif block_type == block_type_code:
+        code_node = create_code_node(block)
+        node = ParentNode("pre", [code_node])
+        return node
+    
+    elif block_type == block_type_quote:
+        new_text, tag = format_quote(block)
+        child_node = text_to_children(new_text)
+        node = ParentNode(f"{tag}", child_node)
+        return node
+    
+    elif block_type == block_type_unordered_list:
+        new_text, tag = format_unordered_list(block)
+        all_child_nodes = format_list_child_nodes(new_text)
+        node = ParentNode(f"{tag}", all_child_nodes)
+        return node
+    
+    elif block_type == block_type_ordered_list:
+        new_text, tag = format_ordered_list(block)
+        all_child_nodes = format_list_child_nodes(new_text)
+        node = ParentNode(f"{tag}", all_child_nodes)
+        return node
 
 
+def text_to_children(text):
+    child_nodes = []
+    text_node = text_to_textnodes(text)
+    for node in text_node:
+        child_nodes.append(text_node_to_html_node(node))
+    return child_nodes
 
 
-markdown = ("""# Heading 1\n\nParagraph 1\n\n```\nCode\n```\n\n> Quote 1\n>> Quote 2\n\n* Unordered List 1\n- Unordered List 2""")
-markdown_to_html_node(markdown)
+def format_heading(heading):
+        if heading.startswith("# "):
+            new_text = heading[2:]
+            tag = "h1"
+        elif heading.startswith("## "):
+            new_text = heading[3:]
+            tag = "h2"
+        elif heading.startswith("### "):
+            new_text = heading[4:]
+            tag = "h3"
+        elif heading.startswith("#### "):
+            new_text = heading[5:]
+            tag = "h4"
+        elif heading.startswith("##### "):
+            new_text = heading[6:]
+            tag = "h5"
+        elif heading.startswith("###### "):
+            new_text = heading[7:]
+            tag = "h6"
+        
+        return new_text, tag
+
+
+def create_code_node(block):
+    child_text = block.replace("```", "")
+    child_node = text_to_children(child_text)
+    code_node = ParentNode("code", child_node)
+    return code_node
+
+
+def format_quote(quote):
+    stripped_lines = []
+    lines = quote.split("\n")
+    for line in lines:
+        if line.startswith("> "):
+            new_text = line[2:]
+        elif line.startswith(">"):
+            new_text = line[1:]
+        stripped_lines.append(new_text)
+    new_text = " ".join(stripped_lines)
+    tag = "blockquote"
+    return new_text, tag
+
+
+def format_unordered_list(block):
+    stripped_lines = []
+    lines = block.split("\n")
+    for line in lines:
+        stripped_lines.append(line[2:])
+    new_text = "\n".join(stripped_lines)
+    tag = "ul"
+    return new_text, tag
+
+
+def format_ordered_list(block):
+    stripped_lines = []
+    lines = block.split("\n")
+    for line in lines:
+        stripped_lines.append(line[3:])
+    new_text = "\n".join(stripped_lines)
+    tag = "ol"
+    return new_text, tag
+
+
+def format_list_child_nodes(text):
+    all_child_nodes = []
+    lines = text.split("\n")
+    for line in lines:
+        child_node = text_to_children(line)
+        child_nodes = ParentNode("li", child_node)
+        all_child_nodes.append(child_nodes)
+    return all_child_nodes
+
+markdown = """This is a paragraph\nAnd this is a **bold** paragraph\nAnd this is an *italic* paragraph"""
+html_node = markdown_to_html_node(markdown)
+print(html_node.to_html())
