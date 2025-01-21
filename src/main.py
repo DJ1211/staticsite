@@ -1,9 +1,14 @@
-from textnode import TextNode, TextType
-from htmlnode import HTMLNode
 import os
 import shutil
+from generate_page import generate_pages_recursive
 
 def main():
+
+    source = "./static"
+    dest = "./public"
+    from_path = "./content"
+    template_path = "./template.html"
+
     def copy_to_public(source, dest):
         if os.path.exists(dest):
             print(f"Deleting existing {dest}")
@@ -28,13 +33,11 @@ def main():
                 new_dest = os.path.join(dest, item)
                 new_source = os.path.join(source,item)
                 copy_items(new_source, new_dest)
-            
-
-
-    source = "./static"
-    dest = "./public"
 
     copy_to_public(source, dest)
+    generate_pages_recursive(from_path, template_path, dest)
+
 
 if __name__ == "__main__":
     main()
+

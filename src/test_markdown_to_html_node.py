@@ -71,7 +71,7 @@ class TestMarkdownToHTMLNode(unittest.TestCase):
         markdown = """> This is a quote\n>This is a 2nd quote"""
         node = markdown_to_html_node(markdown)
         html_node = node.to_html()
-        expected = "<div><blockquote>This is a quote\nThis is a 2nd quote</blockquote></div>"
+        expected = "<div><blockquote>This is a quote This is a 2nd quote</blockquote></div>"
 
         self.assertEqual(html_node, expected)
 

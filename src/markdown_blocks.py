@@ -157,7 +157,7 @@ def format_heading(heading):
 
 
 def create_code_node(block):
-    child_text = block.replace("```", "")
+    child_text = block.replace("```", "").strip()
     child_node = text_to_children(child_text)
     code_node = ParentNode("code", child_node)
     return code_node
@@ -205,7 +205,3 @@ def format_list_child_nodes(text):
         child_nodes = ParentNode("li", child_node)
         all_child_nodes.append(child_nodes)
     return all_child_nodes
-
-markdown = """This is a paragraph\nAnd this is a **bold** paragraph\nAnd this is an *italic* paragraph"""
-html_node = markdown_to_html_node(markdown)
-print(html_node.to_html())
